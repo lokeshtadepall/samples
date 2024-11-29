@@ -1,0 +1,45 @@
+pipeline:
+  name: pipeline-286
+  identifier: pipeline286
+  projectIdentifier: ORCA_onedev
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: git286
+        build: <+input>
+  stages:
+    - stage:
+        name: dontet
+        identifier: dontet
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Run_1
+                  identifier: Run_1
+                  spec:
+                    shell: Sh
+                    command: |-
+                      sudo apt update
+                      sudo apt install -y wget apt-transport-https software-properties-common
+                      wget https://packages.microsoft.com/config/ubuntu/20.04/prod.list
+                      sudo mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
+                      sudo apt-get install dotnet-sdk-7.0
+
+                      # sudo apt update # Replace 7.0 with the desired version
+                      sudo apt-get install dotnet-sdk-7.0 
+                      dotnet restore
+                      dotnet build --configuration Release
+                      dotnet test
